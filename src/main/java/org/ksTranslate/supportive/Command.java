@@ -6,6 +6,11 @@ public enum Command {
     RU_TO_EN("\uD83C\uDDF7\uD83C\uDDFA \u2192 \uD83C\uDDEC\uD83C\uDDE7"),
     HELP("\u2753"),
     START("/start"),
+
+    ADD_WORD("add word"),
+
+    CREATE_CARD("create new card"),
+
     ;
 
     public final String text;

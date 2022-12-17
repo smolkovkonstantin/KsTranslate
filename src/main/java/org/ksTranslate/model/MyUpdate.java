@@ -52,4 +52,20 @@ public class MyUpdate {
     public Update getUpdate() {
         return update;
     }
+
+    public boolean isAddWord() {
+        return getText().equals(Command.ADD_WORD.text);
+    }
+
+    public String getUserName() {
+        return getMessage().getFrom().getUserName();
+    }
+
+    public Long getChatId() {
+        return getMessage().getChatId();
+    }
+
+    public boolean isCreateCard() {
+        return getText().equals(Command.CREATE_CARD.text);
+    }
 }

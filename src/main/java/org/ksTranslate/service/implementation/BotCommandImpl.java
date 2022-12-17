@@ -47,6 +47,62 @@ public class BotCommandImpl implements BotCommand {
         return MessageUtil.send(update, "What's next?");
     }
 
+    @Override
+    public SendMessage start(MyUpdate update) {
+        String answer = mainService.processStartMessage(update);
+
+        return MessageUtil.send(update, answer);
+    }
+
+    @Override
+    public SendMessage help(MyUpdate update) {
+        return MessageUtil.send(update, HELP_MESSAGE);
+    }
+
+    @Override
+    public SendMessage createCard(MyUpdate update) {
+
+        String answer = "Enter the name of the card";
+
+        return MessageUtil.send(update, answer);
+    }
+
+    @Override
+    public SendMessage processText(MyUpdate update, BotStatus botStatus) {
+        if (botStatus.equals(BotStatus.CREATE_CARD)) {
+
+            String answer = mainService.createCard(update);
+
+            return MessageUtil.send(update, answer);
+
+        } else if (botStatus.equals(BotStatus.ADDS_WORD)) {
+
+            String[] textAndCardName = update.getText().split(":");
+
+            if (textAndCardName.length != 2) {
+                return MessageUtil.send(update, "Error input");
+            }
+
+            String answer = mainService.addTextToCard(textAndCardName[0].strip(), textAndCardName[1].strip());
+            return MessageUtil.send(update, answer);
+
+        } else if (botStatus.equals(BotStatus.TRANSLATE_RU_TO_EN)) {
+            return translateText(update, "ru", "en");
+
+        } else if (botStatus.equals(BotStatus.TRANSLATE_EN_TO_RU)) {
+            return translateText(update, "en", "ru");
+
+        } else {
+            throw new RuntimeException();
+        }
+    }
+
+    private SendMessage translateText(MyUpdate update, String fromLanguage, String toLanguage) {
+        String answer = update.getUpdate().getMessage().getText();
+        return MessageUtil.send(update, translate(answer, fromLanguage, toLanguage));
+    }
+
+
     private String translate(String text, String fromLanguage, String toLanguage) {
 
         TranslateConfiguration configuration = new TranslateConfiguration(fromLanguage, toLanguage);
@@ -70,34 +126,4 @@ public class BotCommandImpl implements BotCommand {
         }
     }
 
-    @Override
-    public SendMessage start(MyUpdate update) {
-        String answer = mainService.processStartMessage(update);
-
-        return MessageUtil.send(update, answer);
-    }
-
-    @Override
-    public SendMessage help(MyUpdate update) {
-        return MessageUtil.send(update, HELP_MESSAGE);
-    }
-
-    @Override
-    public SendMessage processText(MyUpdate update, BotStatus botStatus) {
-
-        String fromLanguage;
-        String toLanguage;
-
-        if (botStatus.equals(BotStatus.TRANSLATE_EN_TO_RU)){
-            fromLanguage = "en";
-            toLanguage = "ru";
-        } else{
-            fromLanguage = "ru";
-            toLanguage = "en";
-        }
-
-        String answer = update.getUpdate().getMessage().getText();
-
-        return MessageUtil.send(update, translate(answer, fromLanguage, toLanguage));
-    }
 }

@@ -34,4 +34,6 @@ public interface BotCommand {
 
         return MessageUtil.send(update, answer);
     }
+
+    SendMessage createCard(MyUpdate update);
 }

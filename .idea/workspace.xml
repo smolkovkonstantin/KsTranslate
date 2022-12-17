@@ -4,35 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb69c58a-7b69-42c9-bcdf-a490f76487c8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jpa-buddy.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/KsTranslation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/configuration/TranslateConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/TelegramBot.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/UpdateController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/TelegramUserDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/MyUpdate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/TelegramUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/BotCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/MainService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/SetKeyBoard.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/BotCommandImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/MainServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/SetKeyBoardImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/supportive/BotStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/supportive/Command.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/utilities/MessageUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/log4j.properties" afterDir="false" />
+    <list default="true" id="eb69c58a-7b69-42c9-bcdf-a490f76487c8" name="Changes" comment="добавил бд">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/CardDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/TextDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/Card.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/Text.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/TelegramBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/TelegramBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/UpdateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/UpdateController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/MyUpdate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/MyUpdate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/TelegramUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/TelegramUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/BotCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/BotCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/MainService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/MainService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/BotCommandImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/BotCommandImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/MainServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/MainServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/SetKeyBoardImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/SetKeyBoardImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/supportive/BotStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/supportive/BotStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/supportive/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/supportive/Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,8 +111,16 @@
       <option name="presentableId" value="Default" />
       <updated>1671276780780</updated>
       <workItem from="1671276781953" duration="8341000" />
-      <workItem from="1671291008747" duration="304000" />
+      <workItem from="1671291008747" duration="13881000" />
     </task>
+    <task id="LOCAL-00001" summary="добавил бд">
+      <created>1671291593557</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1671291593557</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,15 +137,8 @@
       </map>
     </option>
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/MainServiceImpl.java</url>
-          <line>20</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="добавил бд" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавил бд" />
   </component>
 </project>

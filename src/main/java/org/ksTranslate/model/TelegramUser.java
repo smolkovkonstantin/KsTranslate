@@ -5,7 +5,9 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +24,10 @@ public class TelegramUser {
     private Long chartId;
 
     private String userName;
+
+    @OneToMany(mappedBy = "telegramUser")
+    @ToString.Exclude
+    private List<Card> cards;
 
     @Override
     public boolean equals(Object o) {

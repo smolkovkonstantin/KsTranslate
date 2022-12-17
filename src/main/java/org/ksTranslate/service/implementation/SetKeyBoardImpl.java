@@ -1,6 +1,7 @@
 package org.ksTranslate.service.implementation;
 
 import lombok.AllArgsConstructor;
+import org.ksTranslate.dao.CardDAO;
 import org.ksTranslate.service.SetKeyBoard;
 import org.ksTranslate.supportive.Command;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class SetKeyBoardImpl implements SetKeyBoard {
 
-    private ReplyKeyboardMarkup replyKeyboardMarkup;
-    private List<KeyboardRow> keyboardRows;
+    private final ReplyKeyboardMarkup replyKeyboardMarkup;
+    private final List<KeyboardRow> keyboardRows;
+    private final CardDAO cardDAO;
 
-    public SetKeyBoardImpl() {
+    public SetKeyBoardImpl(CardDAO cardDAO) {
+        this.cardDAO = cardDAO;
         this.replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.getResizeKeyboard();
 
@@ -30,6 +32,12 @@ public class SetKeyBoardImpl implements SetKeyBoard {
         keyboardRows.clear();
 
         keyboardRows.add(addButtonWihText(Command.HELP.text));
+        keyboardRows.add(addButtonWihText(Command.CREATE_CARD.text));
+
+        if (cardDAO.countAllRaws().isEmpty() || cardDAO.countAllRaws().get() > 0){
+            keyboardRows.add(addButtonWihText(Command.ADD_WORD.text));
+        }
+
         keyboardRows.add(addButtonWihText(Command.EN_TO_RU.text));
         keyboardRows.add(addButtonWihText(Command.RU_TO_EN.text));
 
