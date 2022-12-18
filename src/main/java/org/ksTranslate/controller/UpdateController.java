@@ -2,13 +2,10 @@ package org.ksTranslate.controller;
 
 import lombok.extern.log4j.Log4j;
 import org.ksTranslate.model.MyUpdate;
-import org.ksTranslate.model.SequenceWords;
 import org.ksTranslate.service.implementation.BotCommandImpl;
 import org.ksTranslate.service.implementation.SetKeyBoardImpl;
 import org.ksTranslate.supportive.BotStatus;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 @Log4j
@@ -17,8 +14,6 @@ public class UpdateController {
     private TelegramBot telegramBot;
     private final BotCommandImpl botCommand;
     private final SetKeyBoardImpl keyBoard;
-
-    private final CopyOnWriteArrayList<SequenceWords> sequenceWords = new CopyOnWriteArrayList<>();
 
     public UpdateController(BotCommandImpl botCommand, SetKeyBoardImpl setKeyBoard) {
         this.botCommand = botCommand;
@@ -69,49 +64,42 @@ public class UpdateController {
             } else {
                 findCardCommand(update);
             }
-
-        } else if (telegramBot.getModeWork().equals(BotStatus.LINKED_LIST_MODE)) {
-            SequenceWords currentSequenceWords = new SequenceWords(update.getUser());
-            int index = sequenceWords.indexOf(currentSequenceWords);
-
-            if (update.isGetReady()) {
-                showNextWord(update, sequenceWords.get(index));
-
-            } else if (update.isNext() || update.isPrevious()) {
-                // передаю именно ту карточку, которую выбрал именно тот пользователь ранее
-                showNextWord(update, sequenceWords.get(index));
-
-            } else if (update.isTranslate()) {
-                translateThisWord(update, sequenceWords.get(index));
-
-
+        } else if (telegramBot.getModeWork().equals(BotStatus.READY_TO_TRANSLATE)) {
+            if (update.isStop()) {
+                chooseCommand(update);
             } else {
-                invalidCommand(update);
+                translateTextFromCard(update);
             }
         } else {
             translate(update);
         }
     }
 
+    private void translateTextFromCard(MyUpdate update) {
+        update.setBoard(keyBoard.showAllText(update));
+        telegramBot.sendAnswerMessage(
+                botCommand.processTextWithBotStatus(update, BotStatus.TRANSLATE_EN_TO_RU)
+        );
+        log.debug("TRANSLATE text from card: " + update.getUser() + " : " + update.getText());
+    }
+
     // выбрана карточка по которой пользователь будет учить слова
     private void findCardCommand(MyUpdate update) {
         if (findCardByName(update.getText())) {
-            telegramBot.setModeWork(BotStatus.LINKED_LIST_MODE);
-            update.setBoard(keyBoard.showStartForLearnBoard());
+            telegramBot.setModeWork(BotStatus.READY_TO_TRANSLATE);
+            update.setBoard(keyBoard.showAllText(update));
             telegramBot.sendAnswerMessage(botCommand.cardWasFind(update));
-            sequenceWords.add(new SequenceWords(update.getText(), update.getUser()));
-
         } else {
             update.setBoard(keyBoard.createLearningBoard());
             telegramBot.sendAnswerMessage(botCommand.cardWasNotFind(update));
             telegramBot.setModeWork(BotStatus.LEARNING_MODE);
-
         }
     }
 
     private boolean findCardByName(String text) { // пользователь ввёл название карточки
         // проверка на правильность ввода
-        return botCommand.findCardByName(text).isPresent();
+        // и проверка, что карточка не пустая
+        return botCommand.findCardByName(text).isPresent() && botCommand.isCardEmpty(text);
     }
 
     private void chooseLearningCommand(MyUpdate update) {
@@ -173,35 +161,6 @@ public class UpdateController {
         telegramBot.sendAnswerMessage(botCommand.startLearning(update));
 
         log.debug("START LEARNING: " + update.getUser());
-    }
-
-    // пользователь выбрал какую именно карточку он будет учить, бот показывает ему следующее (первое) слово
-    private synchronized void showNextWord(MyUpdate update, SequenceWords sequenceWords) {
-
-        if (update.isNext() || sequenceWords.isFirstWord()) {
-            sequenceWords.setIdWord(sequenceWords.getIdWord() + 1);
-        } else {
-            sequenceWords.setIdWord(sequenceWords.getIdWord() - 1);
-        }
-
-        update.setBoard(keyBoard.showNextPreviousBoard(sequenceWords.getNameCard(), sequenceWords.getIdWord()));
-
-        var message = botCommand.showWord(update, sequenceWords.getNameCard(), sequenceWords.getIdWord());
-
-        telegramBot.sendAnswerMessage(message);
-
-        log.debug("SHOW WORD:" + update.getUser() + " " + sequenceWords.getNameCard() + " " + sequenceWords.getIdWord());
-    }
-
-
-    private synchronized void translateThisWord(MyUpdate update, SequenceWords sequenceWords) {
-        update.setBoard(keyBoard.showNextPreviousBoard(sequenceWords.getNameCard(), sequenceWords.getIdWord()));
-
-        String word = botCommand.findByNameCardAndNumberOnCard(sequenceWords);
-
-        telegramBot.sendAnswerMessage(botCommand.translateTextToRus(update, word));
-
-        log.debug("SHOW WORD TRANSLATION:" + update.getUser() + " " + sequenceWords.getNameCard() + " " + sequenceWords.getIdWord());
     }
 
     private void chooseCardCommand(MyUpdate update) {

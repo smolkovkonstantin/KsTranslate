@@ -4,7 +4,6 @@ package org.ksTranslate.service.implementation;
 import org.ksTranslate.configuration.TranslateConfiguration;
 import org.ksTranslate.dao.TextDAO;
 import org.ksTranslate.model.MyUpdate;
-import org.ksTranslate.model.SequenceWords;
 import org.ksTranslate.service.BotCommand;
 import org.ksTranslate.service.MainService;
 import org.ksTranslate.supportive.BotStatus;
@@ -130,9 +129,6 @@ public class BotCommandImpl implements BotCommand {
     @Override
     public SendMessage showWord(MyUpdate update, String nameCard, int idWord) {
         String answer;
-        System.out.println(nameCard);
-        System.out.println(idWord);
-        System.out.println("\n" + textDAO.countByCardNameCard(nameCard) + "\n");
 
         if (idWord > textDAO.countByCardNameCard(nameCard)) {
             answer = "На карточке ещё не записаны слова, либо слова закончились";
@@ -151,17 +147,15 @@ public class BotCommandImpl implements BotCommand {
 
     @Override
     public SendMessage cardWasNotFind(MyUpdate update) {
-        return MessageUtil.send(update, "Карточка не была найдена: " + update.getText());
+        return MessageUtil.send(update,
+                "Карточка с таким названием либо не была найдена, либо пуста: "
+                        + update.getText()
+        );
     }
 
     @Override
-    public SendMessage translateTextToRus(MyUpdate update, String word) {
-        return MessageUtil.send(update, translate(word, "en", "ru"));
-    }
-
-    @Override
-    public String findByNameCardAndNumberOnCard(SequenceWords sequenceWords) {
-        return textDAO.findByNameCardAndNumberOnCard(sequenceWords.getNameCard(), sequenceWords.getIdWord());
+    public boolean isCardEmpty(String text) {
+        return textDAO.countByCardNameCard(text) > 0;
     }
 
     @Override

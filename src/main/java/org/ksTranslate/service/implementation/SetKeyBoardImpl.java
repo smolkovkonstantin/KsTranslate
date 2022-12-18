@@ -1,5 +1,6 @@
 package org.ksTranslate.service.implementation;
 
+import org.ksTranslate.dao.TextDAO;
 import org.ksTranslate.model.MyUpdate;
 import org.ksTranslate.service.SetKeyBoard;
 import org.ksTranslate.supportive.Command;
@@ -18,13 +19,16 @@ public class SetKeyBoardImpl implements SetKeyBoard {
     private final List<KeyboardRow> keyboardRows;
 
     private final MainServiceImpl mainService;
+    private final TextDAO textDAO;
 
-    public SetKeyBoardImpl(MainServiceImpl mainService) {
+    public SetKeyBoardImpl(MainServiceImpl mainService,
+                           TextDAO textDAO) {
         this.mainService = mainService;
         this.replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.getResizeKeyboard();
 
         this.keyboardRows = new ArrayList<>();
+        this.textDAO = textDAO;
     }
 
     @Override
@@ -87,17 +91,10 @@ public class SetKeyBoardImpl implements SetKeyBoard {
         return replyKeyboardMarkup;
     }
 
-    @Override
-    public ReplyKeyboardMarkup showNextPreviousBoard(String nameCard, int idWord) {
+    public ReplyKeyboardMarkup showNextPreviousBoard() {
         keyboardRows.clear();
 
-        if (idWord < mainService.getTextDAO().countByCardNameCard(nameCard) && idWord < mainService.getCardDAO().getMaxSize()){
-            keyboardRows.add(addButtonWihText(Command.NEXT.text));
-        }
-        keyboardRows.add(addButtonWihText(Command.TRANSLATE.text));
-        if (idWord > 1) {
-            keyboardRows.add(addButtonWihText(Command.PREVIOUS.text));
-        }
+        keyboardRows.add(addButtonWihText(Command.NEXT.text));
 
         keyboardRows.add(addButtonWihText(Command.STOP.text));
         replyKeyboardMarkup.setKeyboard(keyboardRows);
@@ -106,12 +103,17 @@ public class SetKeyBoardImpl implements SetKeyBoard {
     }
 
     @Override
-    public ReplyKeyboardMarkup showStartForLearnBoard() {
+    public ReplyKeyboardMarkup showAllText(MyUpdate update) {
         keyboardRows.clear();
+        List<String> texts = textDAO.findAllByNameCard(update.getText());
 
-        keyboardRows.add(addButtonWihText(Command.GET_READY.text));
+        texts.forEach(nameCard -> keyboardRows.add(addButtonWihText(nameCard)));
+
+        if (texts.size() == 0) {
+            return null;
+        }
+
         keyboardRows.add(addButtonWihText(Command.STOP.text));
-
         replyKeyboardMarkup.setKeyboard(keyboardRows);
         return replyKeyboardMarkup;
     }

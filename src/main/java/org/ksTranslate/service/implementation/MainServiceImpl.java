@@ -130,7 +130,7 @@ public class MainServiceImpl implements MainService {
     @Override
     public String showWordFromCard(String nameCard, int idWord) {
         String result = textDAO.findByNameCardAndNumberOnCard(nameCard, idWord);
-        System.out.println(result);
+
         if (result == null){
             result = "В этой карточке нет слов";
         }

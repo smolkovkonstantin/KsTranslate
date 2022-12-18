@@ -14,7 +14,7 @@ public interface CardDAO extends JpaRepository<Card, Long> {
     Optional<Long> countCards();
 
     default int getMaxSize() {
-        return 20;
+        return 2;
     }
 
     @Transactional
