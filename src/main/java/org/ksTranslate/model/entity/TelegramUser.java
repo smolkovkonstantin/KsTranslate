@@ -1,4 +1,4 @@
-package org.ksTranslate.model;
+package org.ksTranslate.model.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -24,6 +24,10 @@ public class TelegramUser {
     private Long chartId;
 
     private String userName;
+
+    private String firstName;
+
+    private String lastName;
 
     @OneToMany(mappedBy = "telegramUser")
     @ToString.Exclude

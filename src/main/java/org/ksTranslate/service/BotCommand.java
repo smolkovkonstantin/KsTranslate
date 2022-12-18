@@ -1,6 +1,7 @@
 package org.ksTranslate.service;
 
 import org.ksTranslate.model.MyUpdate;
+import org.ksTranslate.model.SequenceWords;
 import org.ksTranslate.supportive.BotStatus;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -27,4 +28,14 @@ public interface BotCommand {
     SendMessage getInstructionHowAddWords(MyUpdate update);
 
     SendMessage removeCard(MyUpdate update);
+
+    SendMessage showWord(MyUpdate update, String nameCard, int idWord);
+
+    SendMessage cardWasFind(MyUpdate update);
+
+    SendMessage cardWasNotFind(MyUpdate update);
+
+    SendMessage translateTextToRus(MyUpdate update, String word);
+
+    String findByNameCardAndNumberOnCard(SequenceWords sequenceWords);
 }

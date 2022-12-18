@@ -16,7 +16,16 @@ public enum Command {
     LEARNING_MODE("режим обучения"),
 
     SHOW_ALL_CARDS("показать все карточки"),
-    START_LEARNING("начать учить");
+
+    START_LEARNING("начать учить"),
+
+    NEXT("Следующее слово"),
+
+    PREVIOUS("Предыдущее слово"),
+
+    GET_READY("Начать"),
+
+    TRANSLATE("Перевести");
 
     public final String text;
 

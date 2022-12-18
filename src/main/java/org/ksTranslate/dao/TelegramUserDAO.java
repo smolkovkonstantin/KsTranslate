@@ -1,6 +1,6 @@
 package org.ksTranslate.dao;
 
-import org.ksTranslate.model.TelegramUser;
+import org.ksTranslate.model.entity.TelegramUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

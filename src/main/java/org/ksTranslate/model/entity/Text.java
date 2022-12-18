@@ -1,4 +1,4 @@
-package org.ksTranslate.model;
+package org.ksTranslate.model.entity;
 
 import lombok.*;
 
@@ -19,6 +19,8 @@ public class Text {
     private Long idText;
 
     private String text;
+
+    private int numberOnCard; // порядковый номер слова на карточке
 
     @ManyToOne
     @JoinColumn(name = "card_id")

@@ -1,4 +1,4 @@
-package org.ksTranslate.model;
+package org.ksTranslate.model.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;

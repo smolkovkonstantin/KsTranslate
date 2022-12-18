@@ -11,9 +11,11 @@ public interface MainService {
 
     String registerCard(MyUpdate update);
 
-    List<String> getAllCards(MyUpdate update);
+    List<String> getAllCards();
 
     List<String> getAllWordsFromCard(String text);
 
     String removeCard(MyUpdate update);
+
+    String showWordFromCard(String nameCard, int idWord);
 }

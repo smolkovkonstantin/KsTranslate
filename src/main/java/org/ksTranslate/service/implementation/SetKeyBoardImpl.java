@@ -59,6 +59,7 @@ public class SetKeyBoardImpl implements SetKeyBoard {
         if (mainService.getCardDAO().countCards().isEmpty() || mainService.getCardDAO().countCards().get() > 0) {
             keyboardRows.add(addButtonWihText(Command.REMOVE_CARD.text));
             keyboardRows.add(addButtonWihText(Command.ADD_WORD.text));
+            keyboardRows.add(addButtonWihText(Command.START_LEARNING.text));
         }
         keyboardRows.add(addButtonWihText(Command.SHOW_ALL_CARDS.text));
         keyboardRows.add(addButtonWihText(Command.STOP.text));
@@ -71,18 +72,47 @@ public class SetKeyBoardImpl implements SetKeyBoard {
     @Override
     public ReplyKeyboardMarkup showAllCardsBoard(MyUpdate update) {
 
-        List<String> nameCards = mainService.getAllCards(update);
+        List<String> nameCards = mainService.getAllCards();
 
         keyboardRows.clear();
 
         nameCards.forEach(nameCard -> keyboardRows.add(addButtonWihText(nameCard)));
 
-        if (nameCards.size() == 0){
+        if (nameCards.size() == 0) {
             return null;
         }
 
-        replyKeyboardMarkup.setKeyboard(keyboardRows);
         keyboardRows.add(addButtonWihText(Command.STOP.text));
+        replyKeyboardMarkup.setKeyboard(keyboardRows);
+        return replyKeyboardMarkup;
+    }
+
+    @Override
+    public ReplyKeyboardMarkup showNextPreviousBoard(String nameCard, int idWord) {
+        keyboardRows.clear();
+
+        if (idWord < mainService.getTextDAO().countByCardNameCard(nameCard) && idWord < mainService.getCardDAO().getMaxSize()){
+            keyboardRows.add(addButtonWihText(Command.NEXT.text));
+        }
+        keyboardRows.add(addButtonWihText(Command.TRANSLATE.text));
+        if (idWord > 1) {
+            keyboardRows.add(addButtonWihText(Command.PREVIOUS.text));
+        }
+
+        keyboardRows.add(addButtonWihText(Command.STOP.text));
+        replyKeyboardMarkup.setKeyboard(keyboardRows);
+
+        return replyKeyboardMarkup;
+    }
+
+    @Override
+    public ReplyKeyboardMarkup showStartForLearnBoard() {
+        keyboardRows.clear();
+
+        keyboardRows.add(addButtonWihText(Command.GET_READY.text));
+        keyboardRows.add(addButtonWihText(Command.STOP.text));
+
+        replyKeyboardMarkup.setKeyboard(keyboardRows);
         return replyKeyboardMarkup;
     }
 

@@ -4,10 +4,10 @@ import lombok.Getter;
 import org.ksTranslate.dao.CardDAO;
 import org.ksTranslate.dao.TelegramUserDAO;
 import org.ksTranslate.dao.TextDAO;
-import org.ksTranslate.model.Card;
+import org.ksTranslate.model.entity.Card;
 import org.ksTranslate.model.MyUpdate;
-import org.ksTranslate.model.TelegramUser;
-import org.ksTranslate.model.Text;
+import org.ksTranslate.model.entity.TelegramUser;
+import org.ksTranslate.model.entity.Text;
 import org.ksTranslate.service.MainService;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public List<String> getAllCards(MyUpdate update) {
+    public List<String> getAllCards() {
         return telegramUserDAO.showAllNameCards();
     }
 
@@ -51,14 +51,16 @@ public class MainServiceImpl implements MainService {
             answer.append("Приятно Вас снова видеть, ");
         }
 
-        answer.append(telegramUserDAO.findById(update.getMessage().getChatId()).get().getUserName());
+        answer.append(telegramUserDAO.findById(update.getChatId()).get().getFirstName());
         return answer.toString();
     }
 
     private void registerUser(MyUpdate update) {
         TelegramUser telegramUser = TelegramUser.builder()
                 .chartId(update.getMessage().getChatId())
-                .userName(update.getMessage().getFrom().getUserName()).build();
+                .firstName(update.getUser().getFirstName())
+                .lastName(update.getUser().getLastName())
+                .userName(update.getUserName()).build();
 
         telegramUserDAO.save(telegramUser);
     }
@@ -67,7 +69,7 @@ public class MainServiceImpl implements MainService {
     public String addTextToCard(String text, String nameCard) {
         String answer;
 
-        if (textDAO.countAll().get().equals(cardDAO.getMaxSize())) {
+        if (textDAO.countByCardNameCard(nameCard).equals(cardDAO.getMaxSize())) {
             answer = "Карточка вся исписана, создайте ещё одну";
         } else {
             if (textDAO.findByText(text).isEmpty()) {
@@ -88,6 +90,7 @@ public class MainServiceImpl implements MainService {
     private void registerText(String newText, String nameCard) {
         Text text = Text.builder()
                 .text(newText)
+                .numberOnCard(textDAO.countByCardNameCard(nameCard) + 1)
                 .card(cardDAO.findByNameCard(nameCard).get())
                 .build();
 
@@ -122,5 +125,15 @@ public class MainServiceImpl implements MainService {
         textDAO.deleteAllByNameCard(update.getText());
         cardDAO.deleteByNameCard(update.getText());
         return "Карточка с названием" + " " + update.getText() + " " + "удалена";
+    }
+
+    @Override
+    public String showWordFromCard(String nameCard, int idWord) {
+        String result = textDAO.findByNameCardAndNumberOnCard(nameCard, idWord);
+        System.out.println(result);
+        if (result == null){
+            result = "В этой карточке нет слов";
+        }
+        return result;
     }
 }

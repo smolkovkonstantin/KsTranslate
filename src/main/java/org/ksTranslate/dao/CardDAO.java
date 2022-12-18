@@ -1,6 +1,6 @@
 package org.ksTranslate.dao;
 
-import org.ksTranslate.model.Card;
+import org.ksTranslate.model.entity.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,8 +13,8 @@ public interface CardDAO extends JpaRepository<Card, Long> {
     @Query("SELECT COUNT (u) FROM Card u")
     Optional<Long> countCards();
 
-    default Character getMaxSize() {
-        return 50;
+    default int getMaxSize() {
+        return 20;
     }
 
     @Transactional

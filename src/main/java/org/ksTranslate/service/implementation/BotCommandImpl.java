@@ -2,7 +2,9 @@ package org.ksTranslate.service.implementation;
 
 
 import org.ksTranslate.configuration.TranslateConfiguration;
+import org.ksTranslate.dao.TextDAO;
 import org.ksTranslate.model.MyUpdate;
+import org.ksTranslate.model.SequenceWords;
 import org.ksTranslate.service.BotCommand;
 import org.ksTranslate.service.MainService;
 import org.ksTranslate.supportive.BotStatus;
@@ -16,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BotCommandImpl implements BotCommand {
@@ -36,10 +39,12 @@ public class BotCommandImpl implements BotCommand {
     private final MainService mainService;
 
     private final SetKeyBoardImpl keyBoard;
+    private final TextDAO textDAO;
 
-    public BotCommandImpl(MainService mainService, SetKeyBoardImpl setKeyBoard) {
+    public BotCommandImpl(MainService mainService, SetKeyBoardImpl setKeyBoard, TextDAO textDAO) {
         this.mainService = mainService;
         this.keyBoard = setKeyBoard;
+        this.textDAO = textDAO;
     }
 
     @Override
@@ -100,19 +105,6 @@ public class BotCommandImpl implements BotCommand {
     }
 
     @Override
-    public SendMessage chooseCard(MyUpdate update) {
-        ReplyKeyboardMarkup keyboardMarkup = keyBoard.showAllCardsBoard(update);
-
-        if (keyboardMarkup == null) {
-            return MessageUtil.send(update, "У вас ещё нет карточек");
-        }
-
-        update.setBoard(keyboardMarkup);
-
-        return MessageUtil.send(update, "Выберете карточку");
-    }
-
-    @Override
     public SendMessage getInstructionHowAddWords(MyUpdate update) {
         return MessageUtil.send(update, """
                 Введите слово или фразу, которую хотите добавить в карточку, а после через '$'  введите название карточки
@@ -133,6 +125,43 @@ public class BotCommandImpl implements BotCommand {
         }
 
         return MessageUtil.send(update, answer);
+    }
+
+    @Override
+    public SendMessage showWord(MyUpdate update, String nameCard, int idWord) {
+        String answer;
+        System.out.println(nameCard);
+        System.out.println(idWord);
+        System.out.println("\n" + textDAO.countByCardNameCard(nameCard) + "\n");
+
+        if (idWord > textDAO.countByCardNameCard(nameCard)) {
+            answer = "На карточке ещё не записаны слова, либо слова закончились";
+
+        } else {
+            answer = mainService.showWordFromCard(nameCard, idWord);
+        }
+
+        return MessageUtil.send(update, answer);
+    }
+
+    @Override
+    public SendMessage cardWasFind(MyUpdate update) {
+        return MessageUtil.send(update, "Нажмите 'начать', чтобы учить карточку: " + update.getText());
+    }
+
+    @Override
+    public SendMessage cardWasNotFind(MyUpdate update) {
+        return MessageUtil.send(update, "Карточка не была найдена: " + update.getText());
+    }
+
+    @Override
+    public SendMessage translateTextToRus(MyUpdate update, String word) {
+        return MessageUtil.send(update, translate(word, "en", "ru"));
+    }
+
+    @Override
+    public String findByNameCardAndNumberOnCard(SequenceWords sequenceWords) {
+        return textDAO.findByNameCardAndNumberOnCard(sequenceWords.getNameCard(), sequenceWords.getIdWord());
     }
 
     @Override
@@ -212,7 +241,7 @@ public class BotCommandImpl implements BotCommand {
         List<String> texts = mainService.getAllWordsFromCard(update.getText());
 
         if (texts.size() == 0) {
-            return MessageUtil.send(update, "В этой карточе нет слов");
+            return MessageUtil.send(update, "На этой карточке ещё нет слов");
         }
 
         StringBuilder answer = new StringBuilder();
@@ -221,5 +250,13 @@ public class BotCommandImpl implements BotCommand {
 
         return MessageUtil.send(update, answer.toString());
 
+    }
+
+    public SendMessage startLearning(MyUpdate update) {
+        return MessageUtil.send(update, "Выберете какую карточку Вы хотите выучить");
+    }
+
+    public Optional<String> findCardByName(String text) {
+        return mainService.getAllCards().stream().filter(t -> t.equals(text)).findFirst();
     }
 }

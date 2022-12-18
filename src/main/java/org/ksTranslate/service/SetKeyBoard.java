@@ -12,4 +12,8 @@ public interface SetKeyBoard {
     ReplyKeyboardMarkup createLearningBoard();
 
     ReplyKeyboardMarkup showAllCardsBoard(MyUpdate update);
+
+    ReplyKeyboardMarkup showNextPreviousBoard(String nameCard, int idWord);
+
+    ReplyKeyboardMarkup showStartForLearnBoard();
 }
