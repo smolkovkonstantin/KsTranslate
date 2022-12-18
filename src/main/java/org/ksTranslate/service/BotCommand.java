@@ -32,5 +32,5 @@ public interface BotCommand {
 
     SendMessage cardWasNotFind(MyUpdate update);
 
-    boolean isCardEmpty(String text);
+    boolean isCardEmpty(MyUpdate update);
 }

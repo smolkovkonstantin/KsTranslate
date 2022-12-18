@@ -133,21 +133,21 @@ public class UpdateController {
 
     // выбрана карточка по которой пользователь будет учить слова
     private synchronized void findCardCommand(MyUpdate update) {
-        if (findCardByName(update.getText())) {
+        if (findCardByName(update)) {
             telegramBot.setModeWork(BotStatus.READY_TO_TRANSLATE);
             update.setBoard(keyBoard.showAllText(update));
             telegramBot.sendAnswerMessage(botCommand.cardWasFind(update));
         } else {
-            update.setBoard(keyBoard.createLearningBoard());
+            update.setBoard(keyBoard.createLearningBoard(update));
             telegramBot.sendAnswerMessage(botCommand.cardWasNotFind(update));
             telegramBot.setModeWork(BotStatus.LEARNING_MODE);
         }
     }
 
-    private synchronized boolean findCardByName(String text) { // пользователь ввёл название карточки
+    private synchronized boolean findCardByName(MyUpdate update) { // пользователь ввёл название карточки
         // проверка на правильность ввода
         // и проверка, что карточка не пустая
-        return botCommand.findCardByName(text).isPresent() && botCommand.isCardEmpty(text);
+        return botCommand.findCardByName(update).isPresent() && botCommand.isCardEmpty(update);
     }
 
     private synchronized void translateTextFromCard(MyUpdate update) {
@@ -189,7 +189,7 @@ public class UpdateController {
 
     private synchronized void learningModeCommand(MyUpdate update) {
         telegramBot.setModeWork(BotStatus.LEARNING_MODE);
-        update.setBoard(keyBoard.createLearningBoard());
+        update.setBoard(keyBoard.createLearningBoard(update));
         telegramBot.sendAnswerMessage(
                 botCommand.processTextWithBotStatus(update, telegramBot.getModeWork())
         );
@@ -197,7 +197,7 @@ public class UpdateController {
     }
 
     private synchronized void backCommand(MyUpdate update) {
-        update.setBoard(keyBoard.createLearningBoard());
+        update.setBoard(keyBoard.createLearningBoard(update));
         telegramBot.sendAnswerMessage(
                 botCommand.stop(update)
         );

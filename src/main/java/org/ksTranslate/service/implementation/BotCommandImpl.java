@@ -149,8 +149,8 @@ public class BotCommandImpl implements BotCommand {
     }
 
     @Override
-    public boolean isCardEmpty(String text) {
-        return textDAO.countByCardNameCard(text) > 0;
+    public boolean isCardEmpty(MyUpdate update) {
+        return textDAO.countByCardNameCard(update.getText(), update.getChatId()) > 0;
     }
 
     @Override
@@ -170,6 +170,7 @@ public class BotCommandImpl implements BotCommand {
             }
 
             String answer = mainService.addTextToCard(
+                    update,
                     translate(textAndCardName[0].strip(), "ru", "en"),
                     textAndCardName[1].strip()
             );
@@ -180,7 +181,7 @@ public class BotCommandImpl implements BotCommand {
 
             String answer = mainService.removeCard(update);
 
-            update.setBoard(keyBoard.createLearningBoard());
+            update.setBoard(keyBoard.createLearningBoard(update));
 
             return MessageUtil.send(update, answer);
 
@@ -227,7 +228,7 @@ public class BotCommandImpl implements BotCommand {
     }
 
     public SendMessage showAllWord(MyUpdate update) {
-        List<String> texts = mainService.getAllWordsFromCard(update.getText());
+        List<String> texts = mainService.getAllWordsFromCard(update);
 
         if (texts.size() == 0) {
             return MessageUtil.send(update, "На этой карточке ещё нет слов");
@@ -247,7 +248,7 @@ public class BotCommandImpl implements BotCommand {
         return MessageUtil.send(update, "Выберете какую карточку Вы хотите выучить");
     }
 
-    public Optional<String> findCardByName(String text) {
-        return mainService.getAllCards().stream().filter(t -> t.equals(text)).findFirst();
+    public Optional<String> findCardByName(MyUpdate update) {
+        return mainService.getAllCards(update).stream().filter(t -> t.equals(update.getText())).findFirst();
     }
 }

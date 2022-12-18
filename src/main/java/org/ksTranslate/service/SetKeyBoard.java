@@ -9,7 +9,7 @@ public interface SetKeyBoard {
 
     ReplyKeyboardMarkup createStopBoard(); // создаётся board с кнопкой выхода
 
-    ReplyKeyboardMarkup createLearningBoard(); // создаётся board с кнопками для режима обучения
+    ReplyKeyboardMarkup createLearningBoard(MyUpdate update); // создаётся board с кнопками для режима обучения
 
     ReplyKeyboardMarkup showAllCardsBoard(MyUpdate update); // создаётся board со всеми карточками
 

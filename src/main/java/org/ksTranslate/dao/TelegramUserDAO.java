@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface TelegramUserDAO extends JpaRepository<TelegramUser, Long> {
 
-    @Query("SELECT (u.nameCard) FROM Card u")
-    List<String> showAllNameCards();
+    @Query("SELECT (u.nameCard) FROM Card u where u.telegramUser.chartId=?1")
+    List<String> showAllNameCards(Long chardId);
 }

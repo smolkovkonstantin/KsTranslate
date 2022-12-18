@@ -56,14 +56,16 @@ public class SetKeyBoardImpl implements SetKeyBoard {
     }
 
     @Override
-    public ReplyKeyboardMarkup createLearningBoard() {
+    public ReplyKeyboardMarkup createLearningBoard(MyUpdate update) {
         keyboardRows.clear();
 
         keyboardRows.add(addButtonWihText(Command.CREATE_CARD.text));
-        if (mainService.getCardDAO().countCards().isEmpty() || mainService.getCardDAO().countCards().get() > 0) {
+        if (mainService.getCardDAO().countCards(update.getChatId()).isEmpty()
+                || mainService.getCardDAO().countCards(update.getChatId()).get() > 0) {
             keyboardRows.add(addButtonWihText(Command.REMOVE_CARD.text));
             keyboardRows.add(addButtonWihText(Command.ADD_WORD.text));
             keyboardRows.add(addButtonWihText(Command.START_LEARNING.text));
+
         }
         keyboardRows.add(addButtonWihText(Command.SHOW_ALL_CARDS.text));
         keyboardRows.add(addButtonWihText(Command.STOP.text));
@@ -76,7 +78,7 @@ public class SetKeyBoardImpl implements SetKeyBoard {
     @Override
     public ReplyKeyboardMarkup showAllCardsBoard(MyUpdate update) {
 
-        List<String> nameCards = mainService.getAllCards();
+        List<String> nameCards = mainService.getAllCards(update);
 
         keyboardRows.clear();
 
@@ -94,7 +96,7 @@ public class SetKeyBoardImpl implements SetKeyBoard {
     @Override
     public ReplyKeyboardMarkup showAllText(MyUpdate update) {
         keyboardRows.clear();
-        List<String> texts = textDAO.findAllByNameCard(update.getText());
+        List<String> texts = textDAO.findAllByNameCard(update.getText(), update.getChatId());
 
         texts.forEach(nameCard -> keyboardRows.add(addButtonWihText(nameCard)));
 

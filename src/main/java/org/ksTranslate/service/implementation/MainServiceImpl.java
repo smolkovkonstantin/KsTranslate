@@ -30,13 +30,13 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public List<String> getAllCards() {
-        return telegramUserDAO.showAllNameCards();
+    public List<String> getAllCards(MyUpdate update) {
+        return telegramUserDAO.showAllNameCards(update.getChatId());
     }
 
     @Override
-    public List<String> getAllWordsFromCard(String text) {
-        return textDAO.findAllByNameCard(text);
+    public List<String> getAllWordsFromCard(MyUpdate update) {
+        return textDAO.findAllByNameCard(update.getText(), update.getChatId());
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MainServiceImpl implements MainService {
 
     private void registerUser(MyUpdate update) {
         TelegramUser telegramUser = TelegramUser.builder()
-                .chartId(update.getMessage().getChatId())
+                .chartId(update.getChatId())
                 .firstName(update.getUser().getFirstName())
                 .lastName(update.getUser().getLastName())
                 .userName(update.getUserName()).build();
@@ -66,17 +66,17 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public String addTextToCard(String text, String nameCard) {
+    public String addTextToCard(MyUpdate update, String text, String nameCard) {
         String answer;
 
-        if (textDAO.countByCardNameCard(nameCard).equals(cardDAO.getMaxSize())) {
+        if (textDAO.countByCardNameCard(nameCard, update.getChatId()).equals(cardDAO.getMaxSize())) {
             answer = "Карточка вся исписана, создайте ещё одну";
         } else {
-            if (textDAO.findByText(text).isEmpty()) {
-                if (cardDAO.findByNameCard(nameCard).isEmpty()) {
+            if (textDAO.findByTextAndCard_TelegramUser_ChartId(text, update.getChatId()).isEmpty()) {
+                if (cardDAO.findByNameCardAndTelegramUser_ChartId(nameCard, update.getChatId()).isEmpty()) {
                     answer = "Карточки с таким названием нет";
                 } else {
-                    registerText(text, nameCard);
+                    registerText(update, text, nameCard);
                     answer = "Карточка обновлена словом (фразой): " + text;
                 }
             } else {
@@ -87,11 +87,11 @@ public class MainServiceImpl implements MainService {
         return answer;
     }
 
-    private void registerText(String newText, String nameCard) {
+    private void registerText(MyUpdate update, String newText, String nameCard) {
         Text text = Text.builder()
                 .text(newText)
-                .numberOnCard(textDAO.countByCardNameCard(nameCard) + 1)
-                .card(cardDAO.findByNameCard(nameCard).get())
+                .numberOnCard(textDAO.countByCardNameCard(nameCard, update.getChatId()) + 1)
+                .card(cardDAO.findByNameCardAndTelegramUser_ChartId(nameCard, update.getChatId()).get())
                 .build();
 
         textDAO.save(text);
@@ -101,7 +101,7 @@ public class MainServiceImpl implements MainService {
     public String registerCard(MyUpdate update) {
         String answer;
 
-        if (cardDAO.findByNameCard(update.getText()).isEmpty()) {
+        if (cardDAO.findByNameCardAndTelegramUser_ChartId(update.getText(), update.getChatId()).isEmpty()) {
             createCard(update);
             answer = "Создана новая карточка с названием: " + update.getText();
         } else {
@@ -122,8 +122,8 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public String removeCard(MyUpdate update) {
-        textDAO.deleteAllByNameCard(update.getText());
-        cardDAO.deleteByNameCard(update.getText());
+        textDAO.deleteAllByNameCard(update.getText(), update.getChatId());
+        cardDAO.deleteByNameCardAndTelegramUserChartId(update.getText(), update.getChatId());
         return "Карточка с названием" + " " + update.getText() + " " + "удалена";
     }
 }

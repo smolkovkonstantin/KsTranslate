@@ -10,19 +10,18 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TextDAO extends JpaRepository<Text, Long> {
-    Optional<Text> findByText(String text);
+    Optional<Text> findByTextAndCard_TelegramUser_ChartId(String text, Long card_telegramUser_chartId);
 
-    @Query("SELECT (t.text) from Text t where t.card.nameCard=?1")
-    List<String> findAllByNameCard(String nameCard);
+    @Query("SELECT (t.text) from Text t where t.card.nameCard=?1 and t.card.telegramUser.chartId=?2")
+    List<String> findAllByNameCard(String nameCard, Long chartId);
 
     @Modifying
     @Transactional
-    @Query("delete from Text t where t.card in (select (c) from Card c where c.nameCard=?1)")
-    void deleteAllByNameCard(String name);
+    @Query("delete from Text t where t.card in (select (c) from Card c" +
+            " where c.nameCard=?1 and c.telegramUser.chartId=?2)")
+    void deleteAllByNameCard(String name, Long chartId);
 
-    @Query("select (t.text) from Text t where t.card.nameCard=?1 and t.numberOnCard=?2")
-    String findByNameCardAndNumberOnCard(String nameCard, int numberOnCard);
 
-    @Query("select count(t) from Text t where t.card.nameCard=?1")
-    Integer countByCardNameCard(String card_nameCard);
+    @Query("select count(t) from Text t where t.card.nameCard=?1 and t.card.telegramUser.chartId=?2")
+    Integer countByCardNameCard(String card_nameCard, Long chartId);
 }
