@@ -14,6 +14,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * Класс описывает создание бота, прописывается botName и botToken, чтобы можно было подключиться к боту в ТГ
+ */
+
 @Component
 @Log4j
 public class TelegramBot extends TelegramLongPollingBot {

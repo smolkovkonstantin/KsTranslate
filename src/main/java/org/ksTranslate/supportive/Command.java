@@ -7,25 +7,17 @@ public enum Command {
     HELP("\u2753"),
     START("/start"),
 
-    ADD_WORD("добавить слово в карточку"),
+    ADD_WORD("\uD83D\uDCCC"),
 
-    CREATE_CARD("создать новую карточку"),
+    CREATE_CARD("\uD83D\uDCDD"),
 
-    REMOVE_CARD("удалить карточку"),
+    REMOVE_CARD("\uD83D\uDDD1 \uD83D\uDCDD"),
 
-    LEARNING_MODE("режим обучения"),
+    LEARNING_MODE("Режим обучения"),
 
-    SHOW_ALL_CARDS("показать все карточки"),
+    SHOW_ALL_CARDS("\uD83D\uDCC1"),
 
-    START_LEARNING("начать учить"),
-
-    NEXT("Следующее слово"),
-
-    PREVIOUS("Предыдущее слово"),
-
-    GET_READY("Начать"),
-
-    TRANSLATE("Перевести");
+    START_LEARNING("\uD83D\uDCDA");
 
     public final String text;
 

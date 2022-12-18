@@ -5,13 +5,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 
 
 public interface SetKeyBoard {
-    ReplyKeyboardMarkup createStarterBoard();
+    ReplyKeyboardMarkup createStarterBoard(); // создаётся board со стартовыми указаниями
 
-    ReplyKeyboardMarkup createStopBoard();
+    ReplyKeyboardMarkup createStopBoard(); // создаётся board с кнопкой выхода
 
-    ReplyKeyboardMarkup createLearningBoard();
+    ReplyKeyboardMarkup createLearningBoard(); // создаётся board с кнопками для режима обучения
 
-    ReplyKeyboardMarkup showAllCardsBoard(MyUpdate update);
+    ReplyKeyboardMarkup showAllCardsBoard(MyUpdate update); // создаётся board со всеми карточками
 
-    ReplyKeyboardMarkup showAllText(MyUpdate update);
+    ReplyKeyboardMarkup showAllText(MyUpdate update); // создаётся board со фразами (словами)
 }

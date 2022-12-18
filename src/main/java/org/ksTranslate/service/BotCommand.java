@@ -6,9 +6,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 public interface BotCommand {
 
-    SendMessage switchMode(MyUpdate update);
+    SendMessage getInstruction(MyUpdate update); // команда выдаёт инструкции
 
-    SendMessage stop(MyUpdate update);
+    SendMessage stop(MyUpdate update); // команда выполняется при нажатии на крестик
 
     SendMessage start(MyUpdate update);
 

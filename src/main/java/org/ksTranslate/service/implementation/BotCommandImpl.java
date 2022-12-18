@@ -2,7 +2,6 @@ package org.ksTranslate.service.implementation;
 
 
 import org.ksTranslate.configuration.TranslateConfiguration;
-import org.ksTranslate.dao.TelegramUserDAO;
 import org.ksTranslate.dao.TextDAO;
 import org.ksTranslate.model.MyUpdate;
 import org.ksTranslate.service.BotCommand;
@@ -24,34 +23,40 @@ import java.util.Optional;
 public class BotCommandImpl implements BotCommand {
 
     private static final String HELP_MESSAGE = """
-            Я могу переводить с русского языка на английский и наоборот.
-                            
-            Мои команды:
-                /start -
-                /help -
-                /translate -
+            Я умею переводить слова (фразы) с русского на английский и наоборот
+            Для этого нажмите \uD83C\uDDEC\uD83C\uDDE7 \u2192 \uD83C\uDDF7\uD83C\uDDFA или \uD83C\uDDF7\uD83C\uDDFA \u2192 \uD83C\uDDEC\uD83C\uDDE7 соответственно
+            Я могу создавать, удалять карточки, на которые Вы можете записывать слова (фразы),
+            чтобы их учить. Для этого нажмите ''.
+            
+            В режиме обучения с помощью команды Вы можете:
+                \uD83D\uDCDD - создать карточку
+                
+                \uD83D\uDCCC - Добавить слово на карточку
+                
+                \uD83D\uDCDA - начать учить карточки, когда они будут и на них будут слова
+                 (хотя бы на одной)
+                 
+                \uD83D\uDDD1 \uD83D\uDCDD - удалить карточку
+                
+                \uD83D\uDCC1 - просмотреть все карточки
+            
             """;
 
-    private static final String INSTRUCTION = """
-            Enter the word or phrase
-            """;
+    private static final String INSTRUCTION = "Введите слово или фразу";
 
     private final MainService mainService;
 
     private final SetKeyBoardImpl keyBoard;
     private final TextDAO textDAO;
-    private final TelegramUserDAO telegramUserDAO;
 
-    public BotCommandImpl(MainService mainService, SetKeyBoardImpl setKeyBoard, TextDAO textDAO,
-                          TelegramUserDAO telegramUserDAO) {
+    public BotCommandImpl(MainService mainService, SetKeyBoardImpl setKeyBoard, TextDAO textDAO) {
         this.mainService = mainService;
         this.keyBoard = setKeyBoard;
         this.textDAO = textDAO;
-        this.telegramUserDAO = telegramUserDAO;
     }
 
     @Override
-    public SendMessage switchMode(MyUpdate update) {
+    public SendMessage getInstruction(MyUpdate update) {
         return MessageUtil.send(update, INSTRUCTION);
     }
 

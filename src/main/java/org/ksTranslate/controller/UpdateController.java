@@ -7,6 +7,10 @@ import org.ksTranslate.service.implementation.SetKeyBoardImpl;
 import org.ksTranslate.supportive.BotStatus;
 import org.springframework.stereotype.Component;
 
+/**
+ * Класс описывает всё взаимодействие между пользователем и ботом
+ */
+
 @Component
 @Log4j
 public class UpdateController {
@@ -20,11 +24,13 @@ public class UpdateController {
         this.keyBoard = setKeyBoard;
     }
 
-    public void registerBot(TelegramBot telegramBot) {
+    public synchronized void registerBot(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
     }
 
-    public void processUpdate(MyUpdate update) {
+    // метод проверяет, какое сообщение бот получил и обрабатывает только текстовое
+    // если сообщение "непонятного" типа, то пользователю пишется об этом
+    public synchronized void processUpdate(MyUpdate update) {
         if (update != null) {
             if (update.getUpdate().hasMessage()) {
                 processText(update);
@@ -36,7 +42,7 @@ public class UpdateController {
         }
     }
 
-    private void processText(MyUpdate update) {
+    private synchronized void processText(MyUpdate update) {
         if (telegramBot.getModeWork().equals(BotStatus.INITIAL_STATE) || update.isStop()) {
             chooseCommand(update);
 
@@ -75,7 +81,7 @@ public class UpdateController {
         }
     }
 
-    private void chooseLearningCommand(MyUpdate update) {
+    private synchronized void chooseLearningCommand(MyUpdate update) {
         if (update.isAddWord()) {
             addWordCommand(update);
 
@@ -99,7 +105,7 @@ public class UpdateController {
         }
     }
 
-    private void chooseCommand(MyUpdate update) {
+    private synchronized void chooseCommand(MyUpdate update) {
         if (update.isStart()) {
             startCommand(update);
 
@@ -126,7 +132,7 @@ public class UpdateController {
     }
 
     // выбрана карточка по которой пользователь будет учить слова
-    private void findCardCommand(MyUpdate update) {
+    private synchronized void findCardCommand(MyUpdate update) {
         if (findCardByName(update.getText())) {
             telegramBot.setModeWork(BotStatus.READY_TO_TRANSLATE);
             update.setBoard(keyBoard.showAllText(update));
@@ -138,13 +144,13 @@ public class UpdateController {
         }
     }
 
-    private boolean findCardByName(String text) { // пользователь ввёл название карточки
+    private synchronized boolean findCardByName(String text) { // пользователь ввёл название карточки
         // проверка на правильность ввода
         // и проверка, что карточка не пустая
         return botCommand.findCardByName(text).isPresent() && botCommand.isCardEmpty(text);
     }
 
-    private void translateTextFromCard(MyUpdate update) {
+    private synchronized void translateTextFromCard(MyUpdate update) {
         update.setBoard(keyBoard.showAllText(update));
         telegramBot.sendAnswerMessage(
                 botCommand.processTextWithBotStatus(update, BotStatus.TRANSLATE_EN_TO_RU)
@@ -153,7 +159,7 @@ public class UpdateController {
     }
 
     // пользователь решил начать учить слова
-    private void startLearningCommand(MyUpdate update) {
+    private synchronized void startLearningCommand(MyUpdate update) {
         telegramBot.setModeWork(BotStatus.TEACHER_MODE);
 
         update.setBoard(keyBoard.showAllCardsBoard(update));
@@ -163,14 +169,14 @@ public class UpdateController {
         log.debug("START LEARNING: " + update.getUser());
     }
 
-    private void chooseCardCommand(MyUpdate update) {
+    private synchronized void chooseCardCommand(MyUpdate update) {
         // ожидаю, что пользователь введёт название своей карточки (выберет из списка)
         telegramBot.setModeWork(BotStatus.SHOW_ALL_WORDS); // ставлю этот режим, чтобы показать другие карточки или выйти
         telegramBot.sendAnswerMessage(botCommand.showAllWord(update));
         log.debug("SHOW ALL WORD:" + update.getUserName() + " in card " + update.getText() + " ");
     }
 
-    private void showAllCardsCommand(MyUpdate update) {
+    private synchronized void showAllCardsCommand(MyUpdate update) {
         // ставлю на следующее сообщение пользователя учебный режим бота
         telegramBot.setModeWork(BotStatus.SHOW_ALL_WORDS);
 
@@ -181,7 +187,7 @@ public class UpdateController {
         log.debug("SHOW ALL CARDS: " + update.getUser() + " name card: " + update.getText());
     }
 
-    private void learningModeCommand(MyUpdate update) {
+    private synchronized void learningModeCommand(MyUpdate update) {
         telegramBot.setModeWork(BotStatus.LEARNING_MODE);
         update.setBoard(keyBoard.createLearningBoard());
         telegramBot.sendAnswerMessage(
@@ -190,7 +196,7 @@ public class UpdateController {
         log.debug("BOT SWITCHED TO TRAINING MODE: " + update.getUser() + " name card: " + update.getText());
     }
 
-    private void backCommand(MyUpdate update) {
+    private synchronized void backCommand(MyUpdate update) {
         update.setBoard(keyBoard.createLearningBoard());
         telegramBot.sendAnswerMessage(
                 botCommand.stop(update)
@@ -198,14 +204,14 @@ public class UpdateController {
     }
 
     // пользователь указал боту, что он хочет удалить какую-то карточку
-    private void removeCardCommand(MyUpdate update) {
+    private synchronized void removeCardCommand(MyUpdate update) {
         telegramBot.setModeWork(BotStatus.REMOVE_CARD);
         telegramBot.sendAnswerMessage(botCommand.removeCard(update));
         log.debug("USER WANT TO DELETE SAME CARD: " + update.getUser() + " " + update.getText());
     }
 
     // пользователь указал боту, какую конкретно карточку он хочет удалить
-    private void removeCard(MyUpdate update) {
+    private synchronized void removeCard(MyUpdate update) {
         update.setBoard(keyBoard.showAllCardsBoard(update));
         telegramBot.sendAnswerMessage(
                 botCommand.processTextWithBotStatus(update, telegramBot.getModeWork())
@@ -215,7 +221,7 @@ public class UpdateController {
     }
 
     // создание карточки
-    private void createCard(MyUpdate update) {
+    private synchronized void createCard(MyUpdate update) {
         update.setBoard(keyBoard.createStopBoard());
         telegramBot.sendAnswerMessage(
                 botCommand.processTextWithBotStatus(update, telegramBot.getModeWork())
@@ -224,7 +230,7 @@ public class UpdateController {
     }
 
     // пользователь указал боту, что он хочет ввести слово
-    private void addWordCommand(MyUpdate update) {
+    private synchronized void addWordCommand(MyUpdate update) {
         telegramBot.setModeWork(BotStatus.ADDS_WORDS);
         telegramBot.sendAnswerMessage(
                 botCommand.getInstructionHowAddWords(update) // бот выдал указания
@@ -233,7 +239,7 @@ public class UpdateController {
     }
 
     // пользователь ввёл слово, которое он хочет добавить в карточку
-    private void addText(MyUpdate update) {
+    private synchronized void addText(MyUpdate update) {
         update.setBoard(keyBoard.createStopBoard());
         telegramBot.sendAnswerMessage(
                 botCommand.processTextWithBotStatus(update, telegramBot.getModeWork())
@@ -242,7 +248,7 @@ public class UpdateController {
     }
 
     //
-    private void translate(MyUpdate update) {
+    private synchronized void translate(MyUpdate update) {
         update.setBoard(keyBoard.createStopBoard());
         telegramBot.sendAnswerMessage(
                 botCommand.processTextWithBotStatus(update, telegramBot.getModeWork())
@@ -250,46 +256,46 @@ public class UpdateController {
         log.debug("TRANSLATE text: " + update.getUser() + " : " + update.getText());
     }
 
-    private void createCardCommand(MyUpdate update) {
+    private synchronized void createCardCommand(MyUpdate update) {
         update.setBoard(keyBoard.createStopBoard());
         telegramBot.sendAnswerMessage(botCommand.createCard(update));
         telegramBot.setModeWork(BotStatus.CREATE_CARD);
         log.debug("CREATE COMMAND:" + update.getUser() + " : " + update.getText());
     }
 
-    private void switchCommand(MyUpdate update) {
+    private synchronized void switchCommand(MyUpdate update) {
         update.setBoard(keyBoard.createStopBoard());
-        telegramBot.sendAnswerMessage(botCommand.switchMode(update));
+        telegramBot.sendAnswerMessage(botCommand.getInstruction(update));
         log.debug("SWITCH_MODE command: " + update.getUser() + " : " + update.getText());
     }
 
-    private void startCommand(MyUpdate update) {
+    private synchronized void startCommand(MyUpdate update) {
         update.setBoard(keyBoard.createStarterBoard());
         telegramBot.sendAnswerMessage(botCommand.start(update));
         log.debug("START command: " + update.getUser() + " : " + update.getText());
     }
 
-    private void stopCommand(MyUpdate update) {
+    private synchronized void stopCommand(MyUpdate update) {
         update.setBoard(keyBoard.createStarterBoard());
         telegramBot.sendAnswerMessage(botCommand.stop(update));
         telegramBot.setModeWork(BotStatus.INITIAL_STATE);
         log.debug("STOP: " + update.getUser() + " : " + update.getText());
     }
 
-    private void helpCommand(MyUpdate update) {
+    private synchronized void helpCommand(MyUpdate update) {
         update.setBoard(keyBoard.createStarterBoard());
         telegramBot.sendAnswerMessage(botCommand.help(update));
         log.debug("HELP command: " + update.getUser() + " : " + update.getText());
     }
 
-    private void invalidCommand(MyUpdate update) {
+    private synchronized void invalidCommand(MyUpdate update) {
         update.setBoard(keyBoard.createStarterBoard());
         telegramBot.setModeWork(BotStatus.INITIAL_STATE);
         telegramBot.sendAnswerMessage(botCommand.invalidCommand(update));
         log.debug("INVALID command: " + update.getUser() + " : " + update.getText());
     }
 
-    private void unsupportedMessage(MyUpdate update) {
+    private synchronized void unsupportedMessage(MyUpdate update) {
         update.setBoard(keyBoard.createStarterBoard());
         telegramBot.sendAnswerMessage(botCommand.invalidMessage(update));
         log.debug("UNSUPPORTED MESSAGE TYPE:" + update.getUser() + " : " + update.getText());

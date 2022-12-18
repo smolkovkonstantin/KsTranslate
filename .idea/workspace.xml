@@ -4,15 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb69c58a-7b69-42c9-bcdf-a490f76487c8" name="Changes" comment="исправил возможность учить слова по карточкам&#10;&#10;найден ещё один баг">
+    <list default="true" id="eb69c58a-7b69-42c9-bcdf-a490f76487c8" name="Changes" comment="пофиксил баг с показом карточек">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/configuration/TranslateConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/configuration/TranslateConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/TelegramBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/TelegramBot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/UpdateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/UpdateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/MyUpdate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/MyUpdate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/BotCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/BotCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/CardDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/CardDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/MainService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/MainService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/SetKeyBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/SetKeyBoard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/BotCommandImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/BotCommandImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/MainServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/MainServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/SetKeyBoardImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/SetKeyBoardImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/supportive/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/supportive/Command.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +107,7 @@
       <workItem from="1671276781953" duration="8341000" />
       <workItem from="1671291008747" duration="28061000" />
       <workItem from="1671322489998" duration="3082000" />
-      <workItem from="1671350805065" duration="24015000" />
+      <workItem from="1671350805065" duration="27383000" />
     </task>
     <task id="LOCAL-00001" summary="добавил бд">
       <created>1671291593557</created>
@@ -142,7 +144,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671374593577</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="пофиксил баг с показом карточек">
+      <created>1671375140366</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1671375140366</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,6 +175,7 @@
     <MESSAGE value="добавил возможности учить слова по карточкам&#10;&#10;найден один баг" />
     <MESSAGE value="исправил возможность учить слова по карточкам&#10;&#10;найдён ещё один баг" />
     <MESSAGE value="исправил возможность учить слова по карточкам&#10;&#10;найден ещё один баг" />
-    <option name="LAST_COMMIT_MESSAGE" value="исправил возможность учить слова по карточкам&#10;&#10;найден ещё один баг" />
+    <MESSAGE value="пофиксил баг с показом карточек" />
+    <option name="LAST_COMMIT_MESSAGE" value="пофиксил баг с показом карточек" />
   </component>
 </project>
