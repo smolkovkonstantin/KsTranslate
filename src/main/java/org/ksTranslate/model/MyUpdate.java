@@ -30,7 +30,7 @@ public class MyUpdate {
     }
 
     public boolean isStop() {
-        return getText().equals(Command.STOP_TRANSLATE.text);
+        return getText().equals(Command.STOP.text);
     }
 
     public boolean isRuToEnSwitch() {
@@ -67,5 +67,21 @@ public class MyUpdate {
 
     public boolean isCreateCard() {
         return getText().equals(Command.CREATE_CARD.text);
+    }
+
+    public boolean isLearningMode() {
+        return getText().equals(Command.LEARNING_MODE.text);
+    }
+
+    public boolean showAllCards() {
+        return getText().equals(Command.SHOW_ALL_CARDS.text);
+    }
+
+    public boolean isStartLearning() {
+        return getText().equals(Command.START_LEARNING.text);
+    }
+
+    public boolean isRemoveCard() {
+        return getText().equals(Command.REMOVE_CARD.text);
     }
 }

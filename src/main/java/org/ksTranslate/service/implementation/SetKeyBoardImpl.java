@@ -1,7 +1,6 @@
 package org.ksTranslate.service.implementation;
 
-import lombok.AllArgsConstructor;
-import org.ksTranslate.dao.CardDAO;
+import org.ksTranslate.model.MyUpdate;
 import org.ksTranslate.service.SetKeyBoard;
 import org.ksTranslate.supportive.Command;
 import org.springframework.stereotype.Service;
@@ -17,10 +16,11 @@ public class SetKeyBoardImpl implements SetKeyBoard {
 
     private final ReplyKeyboardMarkup replyKeyboardMarkup;
     private final List<KeyboardRow> keyboardRows;
-    private final CardDAO cardDAO;
 
-    public SetKeyBoardImpl(CardDAO cardDAO) {
-        this.cardDAO = cardDAO;
+    private final MainServiceImpl mainService;
+
+    public SetKeyBoardImpl(MainServiceImpl mainService) {
+        this.mainService = mainService;
         this.replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.getResizeKeyboard();
 
@@ -32,12 +32,7 @@ public class SetKeyBoardImpl implements SetKeyBoard {
         keyboardRows.clear();
 
         keyboardRows.add(addButtonWihText(Command.HELP.text));
-        keyboardRows.add(addButtonWihText(Command.CREATE_CARD.text));
-
-        if (cardDAO.countAllRaws().isEmpty() || cardDAO.countAllRaws().get() > 0){
-            keyboardRows.add(addButtonWihText(Command.ADD_WORD.text));
-        }
-
+        keyboardRows.add(addButtonWihText(Command.LEARNING_MODE.text));
         keyboardRows.add(addButtonWihText(Command.EN_TO_RU.text));
         keyboardRows.add(addButtonWihText(Command.RU_TO_EN.text));
 
@@ -49,10 +44,45 @@ public class SetKeyBoardImpl implements SetKeyBoard {
     public ReplyKeyboardMarkup createStopBoard() {
         keyboardRows.clear();
 
-        keyboardRows.add(addButtonWihText(Command.STOP_TRANSLATE.text));
+        keyboardRows.add(addButtonWihText(Command.STOP.text));
 
         replyKeyboardMarkup.setKeyboard(keyboardRows);
 
+        return replyKeyboardMarkup;
+    }
+
+    @Override
+    public ReplyKeyboardMarkup createLearningBoard() {
+        keyboardRows.clear();
+
+        keyboardRows.add(addButtonWihText(Command.CREATE_CARD.text));
+        if (mainService.getCardDAO().countCards().isEmpty() || mainService.getCardDAO().countCards().get() > 0) {
+            keyboardRows.add(addButtonWihText(Command.REMOVE_CARD.text));
+            keyboardRows.add(addButtonWihText(Command.ADD_WORD.text));
+        }
+        keyboardRows.add(addButtonWihText(Command.SHOW_ALL_CARDS.text));
+        keyboardRows.add(addButtonWihText(Command.STOP.text));
+
+        replyKeyboardMarkup.setKeyboard(keyboardRows);
+
+        return replyKeyboardMarkup;
+    }
+
+    @Override
+    public ReplyKeyboardMarkup showAllCardsBoard(MyUpdate update) {
+
+        List<String> nameCards = mainService.getAllCards(update);
+
+        keyboardRows.clear();
+
+        nameCards.forEach(nameCard -> keyboardRows.add(addButtonWihText(nameCard)));
+
+        if (nameCards.size() == 0){
+            return null;
+        }
+
+        replyKeyboardMarkup.setKeyboard(keyboardRows);
+        keyboardRows.add(addButtonWihText(Command.STOP.text));
         return replyKeyboardMarkup;
     }
 
@@ -60,9 +90,7 @@ public class SetKeyBoardImpl implements SetKeyBoard {
 
         KeyboardRow keyboardRow = new KeyboardRow();
 
-        KeyboardButton button =  new KeyboardButton(text);
-
-
+        KeyboardButton button = new KeyboardButton(text);
 
         keyboardRow.add(button);
 

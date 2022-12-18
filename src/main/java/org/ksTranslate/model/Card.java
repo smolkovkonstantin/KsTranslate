@@ -1,9 +1,11 @@
 package org.ksTranslate.model;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -27,4 +29,17 @@ public class Card {
     @OneToMany(mappedBy = "card")
     @ToString.Exclude
     private List<Text> words;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Card card = (Card) o;
+        return idCard != null && Objects.equals(idCard, card.idCard);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

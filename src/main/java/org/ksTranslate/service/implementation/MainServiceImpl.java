@@ -1,5 +1,6 @@
 package org.ksTranslate.service.implementation;
 
+import lombok.Getter;
 import org.ksTranslate.dao.CardDAO;
 import org.ksTranslate.dao.TelegramUserDAO;
 import org.ksTranslate.dao.TextDAO;
@@ -10,7 +11,10 @@ import org.ksTranslate.model.Text;
 import org.ksTranslate.service.MainService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
+@Getter
 public class MainServiceImpl implements MainService {
 
     private final TelegramUserDAO telegramUserDAO;
@@ -26,15 +30,25 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
+    public List<String> getAllCards(MyUpdate update) {
+        return telegramUserDAO.showAllNameCards();
+    }
+
+    @Override
+    public List<String> getAllWordsFromCard(String text) {
+        return textDAO.findAllByNameCard(text);
+    }
+
+    @Override
     public String processStartMessage(MyUpdate update) {
 
         StringBuilder answer = new StringBuilder();
 
         if (telegramUserDAO.findById(update.getMessage().getChatId()).isEmpty()) {
             registerUser(update);
-            answer.append("Nice to meet you, ");
+            answer.append("Рад с Вами познакомиться, ");
         } else {
-            answer.append("Hi, ");
+            answer.append("Приятно Вас снова видеть, ");
         }
 
         answer.append(telegramUserDAO.findById(update.getMessage().getChatId()).get().getUserName());
@@ -54,17 +68,17 @@ public class MainServiceImpl implements MainService {
         String answer;
 
         if (textDAO.countAll().get().equals(cardDAO.getMaxSize())) {
-            answer = "The card is full, so create a new one";
+            answer = "Карточка вся исписана, создайте ещё одну";
         } else {
             if (textDAO.findByText(text).isEmpty()) {
                 if (cardDAO.findByNameCard(nameCard).isEmpty()) {
-                    answer = "Wrong name of card";
+                    answer = "Карточки с таким названием нет";
                 } else {
                     registerText(text, nameCard);
-                    answer = "Added a new word";
+                    answer = "Карточка обновлена словом (фразой): " + text;
                 }
             } else {
-                answer = "This word have already been added";
+                answer = "Такое слово уже есть на карточке";
             }
         }
 
@@ -81,25 +95,32 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public String createCard(MyUpdate update) {
+    public String registerCard(MyUpdate update) {
         String answer;
 
         if (cardDAO.findByNameCard(update.getText()).isEmpty()) {
-            registerCard(update);
-            answer = "Created new card with name: " + update.getText();
+            createCard(update);
+            answer = "Создана новая карточка с названием: " + update.getText();
         } else {
-            answer = "This card have already been created.\n" +
-                    "Specify a different name for the card";
+            answer = "Такая карточка уже была создана\n" +
+                    "Создайте карточку с другим названием";
         }
         return answer;
     }
 
-    private void registerCard(MyUpdate update) {
+    private void createCard(MyUpdate update) {
         Card card = Card.builder()
                 .nameCard(update.getText())
                 .telegramUser(telegramUserDAO.findById(update.getChatId()).get())
                 .build();
 
         cardDAO.save(card);
+    }
+
+    @Override
+    public String removeCard(MyUpdate update) {
+        textDAO.deleteAllByNameCard(update.getText());
+        cardDAO.deleteByNameCard(update.getText());
+        return "Карточка с названием" + " " + update.getText() + " " + "удалена";
     }
 }
