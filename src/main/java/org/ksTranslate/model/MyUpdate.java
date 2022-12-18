@@ -86,23 +86,7 @@ public class MyUpdate {
         return getText().equals(Command.REMOVE_CARD.text);
     }
 
-    public User getUser(){
+    public User getUser() {
         return getMessage().getFrom();
-    }
-
-    public boolean isNext() {
-        return getText().equals(Command.NEXT.text);
-    }
-
-    public boolean isPrevious() {
-        return getText().equals(Command.PREVIOUS.text);
-    }
-
-    public boolean isGetReady() {
-        return getText().equals(Command.GET_READY.text);
-    }
-
-    public boolean isTranslate() {
-        return getText().equals(Command.TRANSLATE.text);
     }
 }

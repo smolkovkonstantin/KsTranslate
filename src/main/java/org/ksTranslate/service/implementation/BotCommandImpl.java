@@ -2,6 +2,7 @@ package org.ksTranslate.service.implementation;
 
 
 import org.ksTranslate.configuration.TranslateConfiguration;
+import org.ksTranslate.dao.TelegramUserDAO;
 import org.ksTranslate.dao.TextDAO;
 import org.ksTranslate.model.MyUpdate;
 import org.ksTranslate.service.BotCommand;
@@ -39,11 +40,14 @@ public class BotCommandImpl implements BotCommand {
 
     private final SetKeyBoardImpl keyBoard;
     private final TextDAO textDAO;
+    private final TelegramUserDAO telegramUserDAO;
 
-    public BotCommandImpl(MainService mainService, SetKeyBoardImpl setKeyBoard, TextDAO textDAO) {
+    public BotCommandImpl(MainService mainService, SetKeyBoardImpl setKeyBoard, TextDAO textDAO,
+                          TelegramUserDAO telegramUserDAO) {
         this.mainService = mainService;
         this.keyBoard = setKeyBoard;
         this.textDAO = textDAO;
+        this.telegramUserDAO = telegramUserDAO;
     }
 
     @Override
@@ -121,20 +125,6 @@ public class BotCommandImpl implements BotCommand {
         } else {
             update.setBoard(temp);
             answer = "Выберете карточку которую хотите удалить";
-        }
-
-        return MessageUtil.send(update, answer);
-    }
-
-    @Override
-    public SendMessage showWord(MyUpdate update, String nameCard, int idWord) {
-        String answer;
-
-        if (idWord > textDAO.countByCardNameCard(nameCard)) {
-            answer = "На карточке ещё не записаны слова, либо слова закончились";
-
-        } else {
-            answer = mainService.showWordFromCard(nameCard, idWord);
         }
 
         return MessageUtil.send(update, answer);
@@ -240,7 +230,9 @@ public class BotCommandImpl implements BotCommand {
 
         StringBuilder answer = new StringBuilder();
 
-        texts.forEach(text -> answer.append(text).append("\n"));
+        System.out.println(texts);
+
+        texts.forEach(text -> answer.append(text).append("\n\n"));
 
         return MessageUtil.send(update, answer.toString());
 

@@ -126,14 +126,4 @@ public class MainServiceImpl implements MainService {
         cardDAO.deleteByNameCard(update.getText());
         return "Карточка с названием" + " " + update.getText() + " " + "удалена";
     }
-
-    @Override
-    public String showWordFromCard(String nameCard, int idWord) {
-        String result = textDAO.findByNameCardAndNumberOnCard(nameCard, idWord);
-
-        if (result == null){
-            result = "В этой карточке нет слов";
-        }
-        return result;
-    }
 }

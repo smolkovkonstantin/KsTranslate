@@ -75,33 +75,6 @@ public class UpdateController {
         }
     }
 
-    private void translateTextFromCard(MyUpdate update) {
-        update.setBoard(keyBoard.showAllText(update));
-        telegramBot.sendAnswerMessage(
-                botCommand.processTextWithBotStatus(update, BotStatus.TRANSLATE_EN_TO_RU)
-        );
-        log.debug("TRANSLATE text from card: " + update.getUser() + " : " + update.getText());
-    }
-
-    // выбрана карточка по которой пользователь будет учить слова
-    private void findCardCommand(MyUpdate update) {
-        if (findCardByName(update.getText())) {
-            telegramBot.setModeWork(BotStatus.READY_TO_TRANSLATE);
-            update.setBoard(keyBoard.showAllText(update));
-            telegramBot.sendAnswerMessage(botCommand.cardWasFind(update));
-        } else {
-            update.setBoard(keyBoard.createLearningBoard());
-            telegramBot.sendAnswerMessage(botCommand.cardWasNotFind(update));
-            telegramBot.setModeWork(BotStatus.LEARNING_MODE);
-        }
-    }
-
-    private boolean findCardByName(String text) { // пользователь ввёл название карточки
-        // проверка на правильность ввода
-        // и проверка, что карточка не пустая
-        return botCommand.findCardByName(text).isPresent() && botCommand.isCardEmpty(text);
-    }
-
     private void chooseLearningCommand(MyUpdate update) {
         if (update.isAddWord()) {
             addWordCommand(update);
@@ -150,6 +123,33 @@ public class UpdateController {
         } else {
             invalidCommand(update);
         }
+    }
+
+    // выбрана карточка по которой пользователь будет учить слова
+    private void findCardCommand(MyUpdate update) {
+        if (findCardByName(update.getText())) {
+            telegramBot.setModeWork(BotStatus.READY_TO_TRANSLATE);
+            update.setBoard(keyBoard.showAllText(update));
+            telegramBot.sendAnswerMessage(botCommand.cardWasFind(update));
+        } else {
+            update.setBoard(keyBoard.createLearningBoard());
+            telegramBot.sendAnswerMessage(botCommand.cardWasNotFind(update));
+            telegramBot.setModeWork(BotStatus.LEARNING_MODE);
+        }
+    }
+
+    private boolean findCardByName(String text) { // пользователь ввёл название карточки
+        // проверка на правильность ввода
+        // и проверка, что карточка не пустая
+        return botCommand.findCardByName(text).isPresent() && botCommand.isCardEmpty(text);
+    }
+
+    private void translateTextFromCard(MyUpdate update) {
+        update.setBoard(keyBoard.showAllText(update));
+        telegramBot.sendAnswerMessage(
+                botCommand.processTextWithBotStatus(update, BotStatus.TRANSLATE_EN_TO_RU)
+        );
+        log.debug("TRANSLATE text from card: " + update.getUser() + " : " + update.getText());
     }
 
     // пользователь решил начать учить слова

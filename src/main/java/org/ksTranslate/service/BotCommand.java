@@ -28,8 +28,6 @@ public interface BotCommand {
 
     SendMessage removeCard(MyUpdate update);
 
-    SendMessage showWord(MyUpdate update, String nameCard, int idWord);
-
     SendMessage cardWasFind(MyUpdate update);
 
     SendMessage cardWasNotFind(MyUpdate update);

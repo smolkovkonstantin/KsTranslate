@@ -16,6 +16,4 @@ public interface MainService {
     List<String> getAllWordsFromCard(String text);
 
     String removeCard(MyUpdate update);
-
-    String showWordFromCard(String nameCard, int idWord);
 }

@@ -91,17 +91,6 @@ public class SetKeyBoardImpl implements SetKeyBoard {
         return replyKeyboardMarkup;
     }
 
-    public ReplyKeyboardMarkup showNextPreviousBoard() {
-        keyboardRows.clear();
-
-        keyboardRows.add(addButtonWihText(Command.NEXT.text));
-
-        keyboardRows.add(addButtonWihText(Command.STOP.text));
-        replyKeyboardMarkup.setKeyboard(keyboardRows);
-
-        return replyKeyboardMarkup;
-    }
-
     @Override
     public ReplyKeyboardMarkup showAllText(MyUpdate update) {
         keyboardRows.clear();
