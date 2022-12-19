@@ -26,7 +26,7 @@ public class BotCommandImpl implements BotCommand {
             Я умею переводить слова (фразы) с русского на английский и наоборот
             Для этого нажмите \uD83C\uDDEC\uD83C\uDDE7 \u2192 \uD83C\uDDF7\uD83C\uDDFA или \uD83C\uDDF7\uD83C\uDDFA \u2192 \uD83C\uDDEC\uD83C\uDDE7 соответственно
             Я могу создавать, удалять карточки, на которые Вы можете записывать слова (фразы),
-            чтобы их учить. Для этого нажмите ''.
+            чтобы их учить. Для этого нажмите 'режим обучения'.
             
             В режиме обучения с помощью команды Вы можете:
                 \uD83D\uDCDD - создать карточку
@@ -137,7 +137,12 @@ public class BotCommandImpl implements BotCommand {
 
     @Override
     public SendMessage cardWasFind(MyUpdate update) {
-        return MessageUtil.send(update, "Нажмите 'начать', чтобы учить карточку: " + update.getText());
+        String answer = """
+                Если Вы не помните как переводится слово (фраза), то нажмите на неё
+                
+                Нажмите \u274C, чтобы выйти
+                """;
+        return MessageUtil.send(update, answer);
     }
 
     @Override

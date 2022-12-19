@@ -4,18 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb69c58a-7b69-42c9-bcdf-a490f76487c8" name="Changes" comment="добавлены комментарии, не уверен, что работает, когда несколько пользователей будут юзать бота">
+    <list default="true" id="eb69c58a-7b69-42c9-bcdf-a490f76487c8" name="Changes" comment="решена проблема с распределением данных в дб">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/BotDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/entity/Bot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/TelegramBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/TelegramBot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/UpdateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/controller/UpdateController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/CardDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/CardDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/TelegramUserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/TelegramUserDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/TextDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/dao/TextDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/BotCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/BotCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/entity/TelegramUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/model/entity/TelegramUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/MainService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/MainService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/SetKeyBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/SetKeyBoard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/BotCommandImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/BotCommandImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/MainServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/MainServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/SetKeyBoardImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/ksTranslate/service/implementation/SetKeyBoardImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +27,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -109,7 +111,7 @@
       <workItem from="1671291008747" duration="28061000" />
       <workItem from="1671322489998" duration="3082000" />
       <workItem from="1671350805065" duration="29529000" />
-      <workItem from="1671391365471" duration="2270000" />
+      <workItem from="1671391365471" duration="17027000" />
     </task>
     <task id="LOCAL-00001" summary="добавил бд">
       <created>1671291593557</created>
@@ -160,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671378613148</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="решена проблема с распределением данных в дб">
+      <created>1671393875259</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1671393875259</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -186,6 +195,7 @@
     <MESSAGE value="исправил возможность учить слова по карточкам&#10;&#10;найден ещё один баг" />
     <MESSAGE value="пофиксил баг с показом карточек" />
     <MESSAGE value="добавлены комментарии, не уверен, что работает, когда несколько пользователей будут юзать бота" />
-    <option name="LAST_COMMIT_MESSAGE" value="добавлены комментарии, не уверен, что работает, когда несколько пользователей будут юзать бота" />
+    <MESSAGE value="решена проблема с распределением данных в дб" />
+    <option name="LAST_COMMIT_MESSAGE" value="решена проблема с распределением данных в дб" />
   </component>
 </project>

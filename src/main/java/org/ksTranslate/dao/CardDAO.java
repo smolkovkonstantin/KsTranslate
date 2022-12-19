@@ -8,9 +8,9 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 public interface CardDAO extends JpaRepository<Card, Long> {
-    Optional<Card> findByNameCardAndTelegramUser_ChartId(String nameCard, Long telegramUser_chartId);
+    Optional<Card> findByNameCardAndTelegramUser_Id(String nameCard, Long telegramUser_chartId);
 
-    @Query("SELECT COUNT (u) FROM Card u where u.telegramUser.chartId=?1")
+    @Query("SELECT COUNT (u) FROM Card u where u.telegramUser.id=?1")
     Optional<Long> countCards(Long chartId);
 
     default int getMaxSize() {
@@ -18,5 +18,5 @@ public interface CardDAO extends JpaRepository<Card, Long> {
     }
 
     @Transactional
-    void deleteByNameCardAndTelegramUserChartId(String nameCard, Long telegramUser_chartId);
+    void deleteByNameCardAndTelegramUserId(String nameCard, Long telegramUser_chartId);
 }

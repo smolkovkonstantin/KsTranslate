@@ -1,14 +1,17 @@
 package org.ksTranslate.service.implementation;
 
 import lombok.Getter;
+import org.ksTranslate.dao.BotDAO;
 import org.ksTranslate.dao.CardDAO;
 import org.ksTranslate.dao.TelegramUserDAO;
 import org.ksTranslate.dao.TextDAO;
+import org.ksTranslate.model.entity.Bot;
 import org.ksTranslate.model.entity.Card;
 import org.ksTranslate.model.MyUpdate;
 import org.ksTranslate.model.entity.TelegramUser;
 import org.ksTranslate.model.entity.Text;
 import org.ksTranslate.service.MainService;
+import org.ksTranslate.supportive.BotStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,10 +26,13 @@ public class MainServiceImpl implements MainService {
 
     private final TextDAO textDAO;
 
-    public MainServiceImpl(TelegramUserDAO telegramUserDAO, CardDAO cardDAO, TextDAO textDAO) {
+    private final BotDAO botDAO;
+
+    public MainServiceImpl(TelegramUserDAO telegramUserDAO, CardDAO cardDAO, TextDAO textDAO, BotDAO botDAO) {
         this.telegramUserDAO = telegramUserDAO;
         this.cardDAO = cardDAO;
         this.textDAO = textDAO;
+        this.botDAO = botDAO;
     }
 
     @Override
@@ -57,12 +63,22 @@ public class MainServiceImpl implements MainService {
 
     private void registerUser(MyUpdate update) {
         TelegramUser telegramUser = TelegramUser.builder()
-                .chartId(update.getChatId())
+                .id(update.getChatId())
                 .firstName(update.getUser().getFirstName())
                 .lastName(update.getUser().getLastName())
-                .userName(update.getUserName()).build();
+                .userName(update.getUserName())
+                .build();
 
         telegramUserDAO.save(telegramUser);
+
+        Bot bot = Bot.builder()
+                .modeWork(BotStatus.INITIAL_STATE)
+                .telegramUser(telegramUser)
+                .build();
+
+        System.out.println(bot);
+
+        botDAO.save(bot);
     }
 
     @Override
@@ -72,8 +88,8 @@ public class MainServiceImpl implements MainService {
         if (textDAO.countByCardNameCard(nameCard, update.getChatId()).equals(cardDAO.getMaxSize())) {
             answer = "Карточка вся исписана, создайте ещё одну";
         } else {
-            if (textDAO.findByTextAndCard_TelegramUser_ChartId(text, update.getChatId()).isEmpty()) {
-                if (cardDAO.findByNameCardAndTelegramUser_ChartId(nameCard, update.getChatId()).isEmpty()) {
+            if (textDAO.findByTextAndCard_TelegramUser_id(text, update.getChatId()).isEmpty()) {
+                if (cardDAO.findByNameCardAndTelegramUser_Id(nameCard, update.getChatId()).isEmpty()) {
                     answer = "Карточки с таким названием нет";
                 } else {
                     registerText(update, text, nameCard);
@@ -91,7 +107,7 @@ public class MainServiceImpl implements MainService {
         Text text = Text.builder()
                 .text(newText)
                 .numberOnCard(textDAO.countByCardNameCard(nameCard, update.getChatId()) + 1)
-                .card(cardDAO.findByNameCardAndTelegramUser_ChartId(nameCard, update.getChatId()).get())
+                .card(cardDAO.findByNameCardAndTelegramUser_Id(nameCard, update.getChatId()).get())
                 .build();
 
         textDAO.save(text);
@@ -101,7 +117,7 @@ public class MainServiceImpl implements MainService {
     public String registerCard(MyUpdate update) {
         String answer;
 
-        if (cardDAO.findByNameCardAndTelegramUser_ChartId(update.getText(), update.getChatId()).isEmpty()) {
+        if (cardDAO.findByNameCardAndTelegramUser_Id(update.getText(), update.getChatId()).isEmpty()) {
             createCard(update);
             answer = "Создана новая карточка с названием: " + update.getText();
         } else {
@@ -123,7 +139,18 @@ public class MainServiceImpl implements MainService {
     @Override
     public String removeCard(MyUpdate update) {
         textDAO.deleteAllByNameCard(update.getText(), update.getChatId());
-        cardDAO.deleteByNameCardAndTelegramUserChartId(update.getText(), update.getChatId());
+        cardDAO.deleteByNameCardAndTelegramUserId(update.getText(), update.getChatId());
         return "Карточка с названием" + " " + update.getText() + " " + "удалена";
+    }
+
+    @Override
+    public BotStatus getBotStatus(MyUpdate update) {
+        var bot = botDAO.getBotByTelegramUserChartId(update.getChatId());
+        return bot.map(Bot::getModeWork).orElse(null);
+    }
+
+    @Override
+    public void setBotStatus(BotStatus botStatus, MyUpdate update) {
+        botDAO.updateModeWorkByModeWork(botStatus, update.getChatId());
     }
 }
